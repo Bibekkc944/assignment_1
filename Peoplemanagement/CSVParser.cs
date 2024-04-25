@@ -1,42 +1,40 @@
-public class CSVParser
+class CsvParser
 {
-    private List<Person> people;
-
-    public CSVParser()
+    List<Person> people = [];
+   // public void Parse()
+    public List<Person> Parse()
     {
-        people = new List<Person>();
-    }
-
-    public void Parse(string filePath)
-    {
-        using (StreamReader reader = new StreamReader(filePath))
+        // Read file
+        string filePath = @"D:\Internship\training\assignment_1\Peoplemanagement\Data\People.csv";
+        var lines = File.ReadAllLines(filePath);
+        
+        // Parsing
+        foreach(var line in lines.Skip(1))
         {
-            while (!reader.EndOfStream)
+            var parts = line.Split(",", StringSplitOptions.RemoveEmptyEntries);
+            var person = new Person
             {
-                string line = reader.ReadLine();
-                if (!string.IsNullOrEmpty(line))
-                {
-                    string[] parts = line.Split(',');
-                    if (parts.Length >= 3) // Assuming CSV format has at least three columns (FirstName, LastName)
-                    {
-                        Person person = new Person
-                        {
-                            Index = parts[0],
-                            FirstName = parts[2],
-                            LastName = parts[3]
-                        };
-                        people.Add(person);
-                    }
-                }
-            }
+                index = int.Parse(parts[0]),
+                userId = parts[1],
+                firstName = parts[2],
+                lastName = parts[3],
+                sex = Enum.Parse<Gender>(parts[4]),
+                email = parts[5],
+                phone = parts[6],
+                dob = DateTime.Parse(parts[7]),
+                jobTitle = parts[8]
+            };
+
+            people.Add(person);
         }
+        return people;
     }
 
     public void PrintNames()
     {
-        foreach (var person in people)
+        foreach(var person in people)
         {
-            Console.WriteLine($"{person.Index} {person.FirstName} {person.LastName}");
+            Console.WriteLine($"{person.firstName} {person.lastName}");
         }
     }
 }
